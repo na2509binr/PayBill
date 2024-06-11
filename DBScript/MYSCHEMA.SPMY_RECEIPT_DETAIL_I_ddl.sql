@@ -1,0 +1,29 @@
+﻿-- Start of DDL Script for Procedure MYSCHEMA.SPMY_RECEIPT_DETAIL_I
+-- Generated 12-Jun-2024 04:20:33 from MYSCHEMA@(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = db11g)))
+
+CREATE OR REPLACE 
+PROCEDURE spmy_receipt_detail_i (
+    p_idReceiptDetail in varchar2,
+    p_idReceipt in varchar2,
+    p_idDish in number,
+    p_quantity in number,
+    p_createdate in varchar2,
+    p_result_out out number
+)IS
+BEGIN
+    p_result_out := 1;
+    INSERT INTO receipt_detail(ID_Receipt_Detail ,ID_Receipt, ID_Dish, Quantity, Create_Date)
+    VALUES  (p_idReceiptDetail, p_idReceipt, p_idDish, p_quantity, p_createdate);
+
+
+    EXCEPTION
+    WHEN OTHERS THEN
+        -- Xử lý lỗi, trả về -1 nếu có lỗi
+        p_result_out := 0;
+END;
+/
+
+
+
+-- End of DDL Script for Procedure MYSCHEMA.SPMY_RECEIPT_DETAIL_I
+

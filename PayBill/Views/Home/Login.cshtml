@@ -1,0 +1,44 @@
+﻿@*@page
+@model YourProjectNamespace.Controllers.AccountController
+*@
+@{
+    ViewData["Title"] = "Login";
+}
+<style>
+    header{
+        display: none;
+    }
+    footer{
+        display: none;
+    }
+
+/*    .container {
+        margin: 150px;
+    }*/
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h2 class="text-center">Admin Login</h2>
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger" style="font-size:11px;">
+                    @ViewBag.Error
+                </div>
+            }
+            <form method="post" action="/Home/Login">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required />
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top:12px;">Login</button>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>

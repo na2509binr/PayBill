@@ -1,0 +1,364 @@
+﻿@model PayBill.Models.GetDataToViewModel;
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+
+<style>
+    td {
+        border: 1px black solid;
+        padding: 1px 10px;
+    }
+
+    th {
+        border: 1px black solid;
+        padding: 3px 10px;
+    }
+
+    .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        display: none;
+        cursor: pointer;
+    }
+
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /*overflow: hidden;*/
+    }
+
+    .default-content {
+        position: relative;
+        z-index: 1;
+        /* Các style khác cho nội dung mặc định */
+    }
+
+    .popup {
+        overflow: auto;
+        height: 80%;
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1000px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        z-index: 3;
+    }
+
+    .titleBackdrop {
+        height: 20%;
+        color: white;
+        margin-top: 15px;
+        text-align: center;
+    }
+</style>
+
+<style>
+    .counter-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    button {
+        padding: 5px 10px;
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+        button:hover {
+            background-color: #f9f9f9;
+        }
+
+    .number {
+        font-size: 16px;
+        width: 15px;
+        text-align: center;
+    }
+
+    .left {
+        border-top: 1px black solid;
+        border-left: 1px black solid;
+        border-right: none;
+        border-bottom: 1px black solid;
+    }
+
+    .center {
+        border-top: 1px black solid;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px black solid;
+    }
+
+    .right {
+        border-top: 1px black solid;
+        border-left: none;
+        border-right: 1px black solid;
+        border-bottom: 1px black solid;
+        text-align: right;
+        padding: 10px;
+    }
+
+    .pay {
+        border: none;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 0;
+    }
+
+</style>
+
+
+<div>
+    @if (!string.IsNullOrEmpty(Model.message))
+    {
+        <div class="con">
+            <asp:Label class="lblMesDataGrid" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+        </div>
+        @* <div class="lblMesDataGrid">@Html.DisplayFor(modelItem => Model.message)</div> *@
+    }
+    <h1>DataGrid Example</h1>
+    <table id="dataGrid" class="dataGrid">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">ID</th>
+                <th onclick="sortTable(1)">Bàn</th>
+                <th onclick="sortTable(2)">Chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.employeeList)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ID_Employee)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Employee_Name)</td>
+                    <td><button id="tbl" type="button" class="btn btn-primary" onclick="openPopup()">Chi tiết</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<div class="backdrop" id="backdrop" onclick="closePopup()">
+    <h3 class="titleBackdrop">Danh sách món</h3>
+</div>
+
+<div class="popup" id="popup">
+    <table id="dataGridPopup" class="dataGridPopup" style="width: 100%;">
+        <thead class="thead-light">
+            <tr>
+                <th onclick="sortTablePopup(0)">ID</th>
+                <th onclick="sortTablePopup(1)">Tên món</th>
+                <th onclick="sortTablePopup(2)">Giá</th>
+                <th onclick="sortTablePopup(3)">Số lượng</th>
+                <th onclick="sortTablePopup(4)">Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.dishesList)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ID_Dish)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Dish_Name)</td>
+                    <td><span class="price">@Html.DisplayFor(modelItem => item.Dish_Price)đ</span></td>
+                    @* <td>@Html.DisplayFor(modelItem => item.Amount)</td> *@
+                    <td>
+                        <div class="counter-container">
+                            <button class="decrement">-</button>
+                            <span class="number">0</span>
+                            <button class="increment">+</button>
+                        </div>
+                    </td>
+                    <td><span class="total">0</span>đ</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <form id="selectedRowForm" method="post" action="/Home/GetReceiptEmployee">
+            <tr>
+                <td class="left"></td>
+                <td class="center"></td>
+                <td class="center"></td>
+                <td class="right">Tổng thanh toán</td>
+                <td><span class="bill">0</span>đ</td>
+            </tr>
+            <tr>
+                <td class="pay"></td>
+                <td class="pay"></td>
+                <td class="pay"></td>
+                <td class="pay"><input type="hidden" id="htmlInput" name="html" value="" /></td>
+                <td class="pay"><button id="pay" type="submit" class="btn btn-primary" style="text-align: right;">Thanh toán</button></td>
+            </tr>
+            </form>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+    document.getElementById("pay").addEventListener("click", function () {
+        // Lấy HTML của trang
+        var html = document.documentElement.outerHTML;
+        console.log(html);
+        // Đặt giá trị HTML vào trường ẩn trong biểu mẫu
+        document.getElementById("htmlInput").value = html;
+
+        // Gửi biểu mẫu
+        document.getElementById("selectedRowForm").submit();
+    });
+</script>
+
+
+<script>
+    var button = document.getElementById("tbl");
+
+    var buttons = document.querySelectorAll("#tbl");
+    buttons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            var activeButtons = document.querySelectorAll(".acti");
+            activeButtons.forEach(function (activeButton) {
+                activeButton.classList.remove("acti");
+            });
+            button.classList.add("acti");
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const incrementButtons = document.querySelectorAll('.increment');
+        const decrementButtons = document.querySelectorAll('.decrement');
+        const numberElements = document.querySelectorAll('.number');
+        const priceElements = document.querySelectorAll('.price');
+        const totalElements = document.querySelectorAll('.total');
+        const rows = document.querySelectorAll('tbody tr');
+        const billElements = document.querySelectorAll('.bill');
+
+        incrementButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                let currentNumber = parseInt(numberElements[index].textContent);
+                currentNumber++;
+                numberElements[index].textContent = currentNumber;
+
+                let currentPrice = parseInt(priceElements[index].textContent);
+                let currentTotal = currentPrice * currentNumber;
+                totalElements[index].textContent = currentTotal;
+
+                calculateBill();
+            });
+        });
+
+        decrementButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                let currentNumber = parseInt(numberElements[index].textContent);
+                if (currentNumber > 0) {
+                    currentNumber--;
+                }
+                numberElements[index].textContent = currentNumber;
+
+                let currentPrice = parseInt(priceElements[index].textContent);
+                let currentTotal = currentPrice * currentNumber;
+                totalElements[index].textContent = currentTotal;
+
+                calculateBill();
+            });
+        });
+
+        function calculateBill() {
+            const totals = document.querySelectorAll('.total');
+            let sum = 0;
+
+            totals.forEach(total => {
+                const value = parseFloat(total.textContent);
+                if (!isNaN(value)) {
+                    sum += value;
+                }
+            });
+
+            document.querySelector('.bill').textContent = sum.toFixed(0);
+        }
+    });
+
+</script>
+
+<script>
+    function sortTable(columnIndex) {
+        const table = document.getElementById("dataGrid");
+        const rows = Array.from(table.rows).slice(1);
+        const isAscending = table.rows[0].cells[columnIndex].classList.toggle("asc");
+
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].textContent.trim();
+            const cellB = rowB.cells[columnIndex].textContent.trim();
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                return isAscending ? cellA - cellB : cellB - cellA;
+            }
+
+            return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+        });
+
+        rows.forEach(row => table.tBodies[0].appendChild(row));
+    }
+
+    function sortTablePopup(columnIndex) {
+        const table = document.getElementById("dataGridPopup");
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.rows);
+        const headerCell = table.rows[0].cells[columnIndex];
+        const isAscending = headerCell.classList.toggle("asc");
+
+        Array.from(headerCell.parentElement.cells).forEach(cell => {
+            if (cell !== headerCell) {
+                cell.classList.remove("asc", "desc");
+            }
+        });
+
+        headerCell.classList.toggle("desc", !isAscending);
+
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].textContent.trim();
+            const cellB = rowB.cells[columnIndex].textContent.trim();
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                return isAscending ? cellA - cellB : cellB - cellA;
+            }
+
+            return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
+<script>
+    function openPopup() {
+        document.getElementById('backdrop').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+        console.log('Open');
+    }
+
+    function closePopup() {
+        document.getElementById('backdrop').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+        console.log('Close');
+    }
+</script>
+
