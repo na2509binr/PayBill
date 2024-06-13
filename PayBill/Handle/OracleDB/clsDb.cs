@@ -8,7 +8,7 @@ namespace PayBill.Handle.OracleDB
         private readonly clsDbDAO _clsDb = new clsDbDAO();
         //private readonly List<Dishes>;
 
-        public Dishes[] GetList_Dish(int p_typeCust)
+        public Dish[] GetList_Dish(int p_typeCust)
         {
             try
             {
@@ -16,11 +16,11 @@ namespace PayBill.Handle.OracleDB
                 if (dtReturn == null) return null;
 
                 var rows = dtReturn.Rows;
-                var itemsReturn = new Dishes[rows.Count];
+                var itemsReturn = new Dish[rows.Count];
 
                 for (int i = 0; i < rows.Count; i++)
                 {
-                    itemsReturn[i] = new Dishes(rows[i]);
+                    itemsReturn[i] = new Dish(rows[i]);
                 }
 
                 return itemsReturn;
