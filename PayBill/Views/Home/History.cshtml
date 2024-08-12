@@ -1,0 +1,343 @@
+﻿@model PayBill.Models.GetDataToViewModel;
+
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<style>
+    /* Căn chỉnh bố cục */
+    .carouselContainer {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .carouselTables {
+        display: none;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    table {
+        border-collapse: collapse;
+        background-color: #f2f2f2;
+    }
+
+    .show{
+        display: inline;
+    }
+
+    /* CSS để định dạng các thẻ p */
+    p {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+        margin-bottom: 10px;
+    }
+
+    .pagination {
+        margin-top: 10px;
+        display: flex;
+        padding-left: 0;
+        padding-bottom: 10px;
+        list-style: none;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: center;
+    }
+
+        .pagination button {
+            margin: 2px;
+            padding: 5px 10px;
+        }
+
+            .pagination button.active {
+                background-color: blue;
+                color: white;
+            }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+</style>
+
+<div>
+    @if (!string.IsNullOrEmpty(Model.message))
+    {
+        <div class="con">
+            <asp:Label class="lblMesDataGrid" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+        </div>
+    }
+    <h1>Tra cứu hóa đơn</h1>
+    <ul class="nav nav-tabs tagBar">
+        <li class="nav-item">
+            <p class="nav-link active" id="1">Hóa đơn</p>
+        </li>
+        <li class="nav-item">
+            <p class="nav-link" id="2">Chi tiết hóa đơn</p>
+        </li>
+        <li class="nav-item">
+            <p class="nav-link" id="3">Hóa đơn nhân viên</p>
+        </li>
+    </ul>
+
+    <br/>
+
+    <!-- Container bao bọc các bảng để tạo hiệu ứng slide -->
+    <div class="carouselContainer">
+        <div class="carouselTables show" id="t1">
+            <table class="table" id="table1">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(0)" class="center">Mã hóa đơn</th>
+                        <th onclick="sortTable(1)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Tổng tiền</th>
+                        <th onclick="sortTable(3)" class="center">Phương thức thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.receiptList)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.ID_Receipt)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.Total_Price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Payment_Methods)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination1">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+        <div class="carouselTables" id="t2">
+            <table class="table" id="table2">
+                <thead class="thead-dark">
+                    <tr >
+                        <th onclick="sortTable(0)" class="center">Mã chi tiết</th>
+                        <th onclick="sortTable(1)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Mã món ăn</th>
+                        <th onclick="sortTable(3)" class="center">Mã hóa đơn</th>
+                        <th onclick="sortTable(4)" class="center">Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.receiptDetailList)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.ID_Receipt_Details)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ID_Dish)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ID_Receipt)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination2">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+        <div class="carouselTables" id="t3">
+            <table class="table" id="table3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(0)" class="center">Mã hóa đơn NV</th>
+                        <th onclick="sortTable(1)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Mã món ăn</th>
+                        <th onclick="sortTable(3)" class="center">Mã nhân viên</th>
+                        <th onclick="sortTable(4)" class="center">Mã hóa đơn</th>
+                        <th onclick="sortTable(5)" class="center">Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.receiptEmployeeList)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.ID_Receipt_Details)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ID_Dish)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ID_Employee)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ID_Receipt)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination3">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+    </div>
+
+    @* --------------- Định dạng bảng dữ liệu --------------- *@
+    <script>
+        function formatTotalPrice() {
+            // Lấy bảng theo ID
+            var table = document.getElementById("table1");
+
+            // Lặp qua từng hàng trong tbody
+            var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            for (var i = 0; i < rows.length; i++) {
+                // Lấy cột thứ 3 (Price)
+                var cell = rows[i].getElementsByTagName("td")[2];
+
+                // Lấy giá trị hiện tại của cột
+                var price = parseFloat(cell.innerText);
+
+                // Định dạng lại số, ví dụ: thêm dấu phân cách hàng nghìn và 2 chữ số thập phân
+                var formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+                // Gán lại giá trị đã định dạng vào cột
+                cell.innerText = formattedPrice;
+            }
+        }
+
+        function formatMethod() {
+            // Lấy bảng theo ID
+            var formattedMethod = '';
+            var table = document.getElementById("table1");
+
+            // Lặp qua từng hàng trong tbody
+            var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            for (var i = 0; i < rows.length; i++) {
+                // Lấy cột thứ 3 (Price)
+                var cell = rows[i].getElementsByTagName("td")[3];
+
+                // Lấy giá trị hiện tại của cột
+                var method = parseFloat(cell.innerText);
+
+                switch (method) {
+                    case 1:
+                        formattedMethod = "Tiền mặt";
+                        break;
+                    case 2:
+                        formattedMethod = "Chuyển khoản";
+                        break;
+                    case 3:
+                        formattedMethod = "Credit Card";
+                        break;
+                    default:
+                        formattedMethod = "";                      
+                }
+
+                cell.innerText = formattedMethod;
+            }
+        }
+
+        // Gọi hàm để thực thi khi cần
+        formatTotalPrice();
+        formatMethod();
+    </script>
+    @* --------------- Phân trang bảng --------------- *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function paginate(tableId, paginationId, itemsPerPage) {
+                const table = document.getElementById(tableId);
+                const tbody = table.querySelector('tbody');
+                const pagination = document.getElementById(paginationId);
+                const rows = table.getElementsByTagName('tr');
+                const totalPages = Math.ceil(rows.length / itemsPerPage);
+
+                function showPage(page) {
+                    for (let i = 0; i < rows.length; i++) {
+                        rows[i].style.display = (i >= (page - 1) * itemsPerPage && i < page * itemsPerPage) ? '' : 'none';
+                    }
+
+                    const buttons = pagination.getElementsByTagName('button');
+                    for (let i = 0; i < buttons.length; i++) {
+                        buttons[i].classList.remove('active');
+                    }
+                    buttons[page - 1].classList.add('active');
+                }
+
+                function createPagination() {
+                    pagination.innerHTML = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        const button = document.createElement('button');
+                        button.classList.add('btn');
+                        button.innerText = i;
+                        button.addEventListener('click', function () {
+                            showPage(i);
+                        });
+                        pagination.appendChild(button);
+                    }
+                    showPage(1); // Show the first page by default
+                }
+
+                createPagination();
+            }
+
+            // Apply pagination to both tables
+            paginate('table1', 'pagination1', 10);
+            paginate('table2', 'pagination2', 10);
+            paginate('table3', 'pagination3', 10);
+        });
+
+
+
+
+    </script>
+
+    @* --------------- Chuyển tag và hiển thị table tương ứng --------------- *@
+    <script>
+        // Lấy tất cả các thẻ li trong ul
+        const listTag = document.querySelectorAll('.tagBar li p');
+        const listTable = document.querySelectorAll('.carouselTables');
+
+        // Hàm xử lý khi nhấp vào thẻ li
+        function handleClick(event) {
+            // Xóa class 'active' khỏi tất cả các thẻ li
+            listTag.forEach(item => item.classList.remove('active'));
+
+            // Thêm class 'active' vào thẻ li được nhấp
+            event.target.classList.add('active');
+            console.log(event.target.id);
+
+            listTable.forEach(item => item.classList.remove('show'));
+            const tableToShow = document.getElementById("t"+event.target.id);
+            if (tableToShow) {
+                tableToShow.classList.add('show');
+            }
+        }
+
+        // Gán sự kiện click cho tất cả các thẻ li
+        listTag.forEach(item => item.addEventListener('click', handleClick));
+    </script>
+
+    @* --------------- Sắp xếp cột trong bảng --------------- *@
+    <script>
+        function sortTable(columnIndex) {
+            const table = document.getElementById("table1");
+            const rows = Array.from(table.rows).slice(1);
+            const isAscending = table.rows[0].cells[columnIndex].classList.toggle("asc");
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].textContent.trim();
+                const cellB = rowB.cells[columnIndex].textContent.trim();
+
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return isAscending ? cellA - cellB : cellB - cellA;
+                }
+
+                return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+            });
+
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+        }
+    </script>
+</div>

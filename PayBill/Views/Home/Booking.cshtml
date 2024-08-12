@@ -1,4 +1,5 @@
 ﻿@model PayBill.Models.GetDataToViewModel;
+
 @using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Privacy Policy";
@@ -123,6 +124,44 @@
         padding-right: 0;
     }
 
+    .paymentMethods {
+        border: none;
+        width: 190px;
+        text-align:center;
+        padding-top: 10px;
+    }
+
+    .divMethod{
+        padding: 5px 0;
+        border-radius: 2px;
+    }
+
+    .chose {
+        display: inline-block;
+        width: 30%;
+        text-align: center;
+        font-size: 26px;
+        padding: 5px 10px;
+        border-radius: 2px;
+    }
+
+    .chose:hover {
+        background-color: darkgray;
+    }
+
+    .slt {
+        background-color: darkgray;
+        border-radius: 2px;
+    }
+
+    #option1, #option2, #option3 {
+        appearance: none;      
+    }
+
+    .lblMethod1, .lblMethod2, .lblMethod3 {
+        display: none;
+    }
+
 </style>
 
 
@@ -130,7 +169,13 @@
     @if (!string.IsNullOrEmpty(Model.message))
     {
         <div class="con">
-            <asp:Label class="lblMesDataGrid" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+            @if (Model.message == "Thanh toán thành công!")
+            {  
+                <asp:Label class="lblMesSuc" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+            }else
+            {           
+                <asp:Label class="lblMesErr" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+            }
         </div>
         @* <div class="lblMesDataGrid">@Html.DisplayFor(modelItem => Model.message)</div> *@
     }
@@ -201,16 +246,41 @@
                     <td><span class="bill">0</span>đ</td>
                 </tr>
                 <tr>
-                    <td class="pay"></td>
-                    <td class="pay"></td>
-                    <td class="pay"></td>
                     <td class="pay"><input type="hidden" id="htmlInput" name="html" value="" /></td>
+                    <td class="pay"></td>
+                    <td class="pay"></td>
+                    <td class="paymentMethods">
+                        <p class="lblMethod1">Tiền mặt</p>
+                        <p class="lblMethod2">Chuyển khoản</p>
+                        <p class="lblMethod3">Credit Card</p>
+                        <div class="divMethod">
+                            <div id="1" class="chose fa-solid fa-wallet"></div>
+                            <div id="2" class="chose fa-solid fa-money-bill-wave"></div>
+                            <div id="3" class="chose fa-regular fa-credit-card"></div>
+                        </div>
+                    </td>
                     <td class="pay"><button id="pay" type="submit" class="btn btn-primary" style="text-align: right;">Thanh toán</button></td>
                 </tr>
             </form>
         </tfoot>
     </table>
 </div>
+
+<script>
+    // Lấy tất cả các thẻ có class "clickable"
+    const divs = document.querySelectorAll('.chose');
+
+    // Thêm sự kiện click cho từng thẻ
+    divs.forEach(div => {
+        div.addEventListener('click', function () {
+            // Xóa class "slt" khỏi tất cả các thẻ
+            divs.forEach(d => d.classList.remove('slt'));
+
+            // Thêm class "slt" cho thẻ vừa được click
+            this.classList.add('slt');
+        });
+    });
+</script>
 
 <script>
     document.getElementById("pay").addEventListener("click", function () {

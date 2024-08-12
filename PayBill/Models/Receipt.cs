@@ -7,6 +7,7 @@ public class Receipt
     public string ID_Receipt { get; set; }
     public string Create_Date { get; set; }
     public long Total_Price { get; set; }
+    public int Payment_Methods { get; set; }
 
     public Receipt()
     {
@@ -18,6 +19,7 @@ public class Receipt
         if (row.Table.Columns.Contains("ID_Receipt")) { ID_Receipt = row["ID_Receipt"].ToString(); }
         if (row.Table.Columns.Contains("Create_Date")) { Create_Date = row["Create_Date"].ToString(); }
         if (row.Table.Columns.Contains("Total_Price")) { Total_Price = long.Parse(row["Total_Price"].ToString()); }
+        if (row.Table.Columns.Contains("Payment_Methods")) { Payment_Methods = int.Parse(row["Payment_Methods"].ToString()); }
     }
 }
 

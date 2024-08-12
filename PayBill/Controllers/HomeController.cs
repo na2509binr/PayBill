@@ -4,6 +4,7 @@ using PayBill.Data;
 using PayBill.Handle.OracleDB;
 using PayBill.Models;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using X.PagedList;
 
 namespace PayBill.Controllers
@@ -27,35 +28,8 @@ namespace PayBill.Controllers
 
         public IActionResult Booking()
         {
-            //_clsDb = new clsDb();
-            //Dish[] arrDishes = _clsDb.GetList_Dish(-1);
             var dishes = _dbContext.Dishes.ToArray();
             var tables = _dbContext.Tables.ToArray();
-            /*Tables[] arr = new Tables[]
-            {
-                new Tables {ID= 9, NameTable="Bàn 9"},
-                new Tables {ID= 2, NameTable="Bàn 2"},
-                new Tables {ID= 5, NameTable="Bàn 5"},
-                new Tables {ID= 7, NameTable="Bàn 7"},
-                new Tables {ID= 1, NameTable="Bàn 1"},
-                new Tables {ID= 3, NameTable="Bàn 3"},
-                new Tables {ID= 8, NameTable="Bàn 8"},
-                new Tables {ID= 4, NameTable="Bàn 4"},
-                new Tables {ID= 6, NameTable="Bàn 6"}
-            };
-
-            Dish[] arrDish = new Dish[]
-            {
-                new Dish {ID_Dish = 9, Dish_Name="Rượu Sake" ,Dish_Price = "8000"},
-                new Dish {ID_Dish = 2, Dish_Name="Banh my", Dish_Price = "230000"},
-                new Dish {ID_Dish = 5, Dish_Name="Sushi", Dish_Price = "6000"},
-                new Dish {ID_Dish = 7, Dish_Name="Sashimi", Dish_Price = "100000"},
-                new Dish {ID_Dish = 1, Dish_Name="Bánh nhân bạch tuộc Takoyaki", Dish_Price = "20000"},
-                new Dish {ID_Dish = 3, Dish_Name="Lẩu bò Shabu", Dish_Price = "9000"},
-                new Dish {ID_Dish = 8, Dish_Name="Cơm cà ri", Dish_Price = "65000"},
-                new Dish {ID_Dish = 4, Dish_Name="Bach tuoc Nhat", Dish_Price = "2000"},
-                new Dish {ID_Dish = 6, Dish_Name="Okonomiyaki monjayaki", Dish_Price = "8000"}
-            };*/
 
             GetDataToViewModel getDataModel = new GetDataToViewModel();
             getDataModel.tablesList = tables.ToPagedList<Tables>();
@@ -100,6 +74,20 @@ namespace PayBill.Controllers
             return View("Employee", getDataModel);
         }
 
+        public IActionResult History()
+        {
+            var receipts = _dbContext.Receipts.ToArray();
+            var receiptsDetail = _dbContext.Receipt_Details.ToArray();
+            var receiptsEmployee = _dbContext.Receipt_Employees.ToArray();
+
+            GetDataToViewModel getDataModel = new GetDataToViewModel();
+            getDataModel.receiptList = receipts.ToPagedList<Receipt>();
+            getDataModel.receiptDetailList = receiptsDetail.ToPagedList<Receipt_Details>();
+            getDataModel.receiptEmployeeList = receiptsEmployee.ToPagedList<Receipt_Employee>();
+            getDataModel.message = TempData["Message"] as string;
+            return View("History", getDataModel);
+        }
+
         #region Read HTML to get List Receipt
         [HttpPost]
         public IActionResult GetReceiptDetails(string html)
@@ -110,6 +98,7 @@ namespace PayBill.Controllers
                 string message = "";
                 string idTable = "";
                 long totalMoney = 0;
+                int paymentMethods = 0;
                 var tableDataList = new List<Receipt_Details>();
 
 
@@ -120,11 +109,28 @@ namespace PayBill.Controllers
                 var bill = doc.DocumentNode.SelectNodes("//span[contains(@class, 'bill')]");          
                 if (bill != null)
                 {
-                    Console.WriteLine("Các giá trị của thẻ có class 'bill':");
                     foreach (var node in bill)
                     {
                         totalMoney = long.Parse(node.InnerText);
                     }
+                    if (totalMoney == 0)
+                    {
+                        message = "Vui lòng chọn món trước khi thanh toán!";
+                        TempData["Message"] = message;
+                        return RedirectToAction("Booking");
+                    }
+                }
+
+                var divSelect = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'slt')]");
+                if (divSelect != null)
+                {
+                    paymentMethods = int.Parse(divSelect.GetAttributeValue("id", string.Empty));
+                }
+                else
+                {
+                    message = "Vui lòng chọn phương thức thanh toán!";
+                    TempData["Message"] = message;
+                    return RedirectToAction("Booking");
                 }
 
 
@@ -147,11 +153,14 @@ namespace PayBill.Controllers
                 }
 
                 var idReceipt = dteNow.ToString("dd/MM/yyyy HH:mm:ss:ffff") + idTable;
+
+
                 Receipt modelReceipt = new Receipt()
                 {
                     ID_Receipt = idReceipt,
                     Create_Date = dteNow.ToString("dd/MM/yyyy"),
-                    Total_Price = totalMoney
+                    Total_Price = totalMoney,
+                    Payment_Methods = paymentMethods
                 };
 
                 var tablesPopup = doc.DocumentNode.SelectNodes("//table[contains(@class, 'dataGridPopup')]");
@@ -237,6 +246,7 @@ namespace PayBill.Controllers
                 string message = "";
                 string idEmp = "";
                 long totalMoney = 0;
+                int paymentMethods = 0;
                 var tableDataList = new List<Receipt_Employee>();
 
 
@@ -247,13 +257,29 @@ namespace PayBill.Controllers
                 var bill = doc.DocumentNode.SelectNodes("//span[contains(@class, 'bill')]");
                 if (bill != null)
                 {
-                    Console.WriteLine("Các giá trị của thẻ có class 'bill':");
                     foreach (var node in bill)
                     {
                         totalMoney = long.Parse(node.InnerText);
                     }
+                    if (totalMoney == 0)
+                    {
+                        message = "Vui lòng chọn món trước khi thanh toán!";
+                        TempData["Message"] = message;
+                        return RedirectToAction("Employee");
+                    }
                 }
 
+                var divSelect = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'slt')]");
+                if (divSelect != null)
+                {
+                    paymentMethods = int.Parse(divSelect.GetAttributeValue("id", string.Empty));
+                }
+                else
+                {
+                    message = "Vui lòng chọn phương thức thanh toán!";
+                    TempData["Message"] = message;
+                    return RedirectToAction("Employee");
+                }
 
                 var buttonActive = doc.DocumentNode.SelectNodes("//button[contains(@class, 'acti')]");
                 if (buttonActive != null)
@@ -277,7 +303,8 @@ namespace PayBill.Controllers
                 {
                     ID_Receipt = idReceipt,
                     Create_Date = dteNow.ToString("dd/MM/yyyy"),
-                    Total_Price = totalMoney
+                    Total_Price = totalMoney,
+                    Payment_Methods = paymentMethods
                 };
 
                 var tablesPopup = doc.DocumentNode.SelectNodes("//table[contains(@class, 'dataGridPopup')]");
@@ -337,6 +364,7 @@ namespace PayBill.Controllers
                         _dbContext.Receipt_Employees.AddRange(tableDataList);
                         _dbContext.SaveChanges();
                         message = "Thanh toán thành công!";
+
                         TempData["Message"] = message;
                     }
                     catch(Exception ex)

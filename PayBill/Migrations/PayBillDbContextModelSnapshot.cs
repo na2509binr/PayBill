@@ -62,6 +62,9 @@ namespace PayBill.Migrations
                     b.Property<long>("Total_Price")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("Payment_Methods")
+                        .HasColumnType("int");
+
                     b.HasKey("ID_Receipt");
 
                     b.ToTable("T_Receipt", (string)null);
