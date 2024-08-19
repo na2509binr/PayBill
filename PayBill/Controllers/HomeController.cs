@@ -74,18 +74,51 @@ namespace PayBill.Controllers
             return View("Employee", getDataModel);
         }
 
-        public IActionResult History()
+        public IActionResult History(string fromdte, string todte)
         {
-            var receipts = _dbContext.Receipts.ToArray();
-            var receiptsDetail = _dbContext.Receipt_Details.ToArray();
-            var receiptsEmployee = _dbContext.Receipt_Employees.ToArray();
+            try
+            {
+                Receipt[] receipts;
 
-            GetDataToViewModel getDataModel = new GetDataToViewModel();
-            getDataModel.receiptList = receipts.ToPagedList<Receipt>();
-            getDataModel.receiptDetailList = receiptsDetail.ToPagedList<Receipt_Details>();
-            getDataModel.receiptEmployeeList = receiptsEmployee.ToPagedList<Receipt_Employee>();
-            getDataModel.message = TempData["Message"] as string;
-            return View("History", getDataModel);
+                //if ((fromdte == "" || fromdte is null) && (todte == "" || todte is null))
+                    receipts = _dbContext.Receipts.ToArray();  
+                //else if ((fromdte == "" || fromdte is null) || (todte == "" || todte is null))
+                //    if (fromdte == "" || fromdte is null)
+                //        receipts = _dbContext.Receipts.Where(x => DateTime.Parse(x.Create_Date) >= DateTime.Parse(fromdte)).ToArray();
+                //    else
+                //        receipts = _dbContext.Receipts.Where(x => DateTime.ParseExact(x.Create_Date, "dd-MM-yyyy", null) <= DateTime.ParseExact(todte, "dd-MM-yyyy", null)).ToArray();
+                //else
+                //    receipts = _dbContext.Receipts.Where(x => DateTime.Parse(x.Create_Date) >= DateTime.Parse(fromdte) && DateTime.Parse(x.Create_Date) <= DateTime.Parse(todte)).ToArray();
+
+
+                var receiptsDetail = _dbContext.Receipt_Details.ToArray();
+
+                var query = from t1 in _dbContext.Receipt_Employees
+                            join t2 in _dbContext.Dishes on t1.ID_Dish equals t2.ID_Dish
+                            join t3 in _dbContext.Employees on t1.ID_Employee equals t3.ID_Employee
+                            select new ReceiptEmployeeViewModel
+                            {
+                                ID = t1.ID_Receipt,
+                                Dish_Name = t2.Dish_Name,
+                                Emp_Name = t3.Employee_Name,
+                                Create_Date = t1.Create_Date,
+                                Quantity = t1.Quantity
+                            };
+
+                ReceiptEmployeeViewModel[] receiptEmployeeModel = query.ToArray();
+
+
+                GetDataToViewModel getDataModel = new GetDataToViewModel();
+                getDataModel.receiptList = receipts.ToPagedList<Receipt>();
+                getDataModel.receiptDetailList = receiptsDetail.ToPagedList<Receipt_Details>();
+                getDataModel.receiptEmployeeModelList = receiptEmployeeModel.ToPagedList<ReceiptEmployeeViewModel>();
+                getDataModel.message = TempData["Message"] as string;
+                return View("History", getDataModel);
+            }
+            catch (Exception)
+            {
+                return View("History");
+            }
         }
 
         #region Read HTML to get List Receipt

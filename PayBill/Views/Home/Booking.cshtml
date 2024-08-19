@@ -137,6 +137,7 @@
     }
 
     .chose {
+        position: relative;
         display: inline-block;
         width: 30%;
         text-align: center;
@@ -145,8 +146,29 @@
         border-radius: 2px;
     }
 
+    .hover-content {
+        display: none;
+        background-color: #555;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: absolute;
+        top: -50px;
+        left: -70px;
+        width: 200px;
+        z-index: 1;
+        border-radius: 5px;
+        font-family: var(--bs-body-font-family);
+        font-size: 20px;
+        font-weight: 100;
+    }
+
     .chose:hover {
-        background-color: darkgray;
+        background-color: #D8D7D7;
+    }
+
+    .chose:hover .hover-content {
+        display: block;
     }
 
     .slt {
@@ -154,16 +176,15 @@
         border-radius: 2px;
     }
 
+    .slt:hover {
+            background-color: darkgray;
+            border-radius: 2px;
+    }
+
     #option1, #option2, #option3 {
         appearance: none;      
     }
-
-    .lblMethod1, .lblMethod2, .lblMethod3 {
-        display: none;
-    }
-
 </style>
-
 
 <div>
     @if (!string.IsNullOrEmpty(Model.message))
@@ -250,13 +271,10 @@
                     <td class="pay"></td>
                     <td class="pay"></td>
                     <td class="paymentMethods">
-                        <p class="lblMethod1">Tiền mặt</p>
-                        <p class="lblMethod2">Chuyển khoản</p>
-                        <p class="lblMethod3">Credit Card</p>
                         <div class="divMethod">
-                            <div id="1" class="chose fa-solid fa-wallet"></div>
-                            <div id="2" class="chose fa-solid fa-money-bill-wave"></div>
-                            <div id="3" class="chose fa-regular fa-credit-card"></div>
+                            <div id="1" class="chose fa-solid fa-wallet"><p class="hover-content">Tiền mặt</p></div>
+                            <div id="2" class="chose fa-solid fa-money-bill-wave"><p class="hover-content">Chuyển khoản</p></div>
+                            <div id="3" class="chose fa-regular fa-credit-card"><p class="hover-content">Credit Card</p></div>
                         </div>
                     </td>
                     <td class="pay"><button id="pay" type="submit" class="btn btn-primary" style="text-align: right;">Thanh toán</button></td>

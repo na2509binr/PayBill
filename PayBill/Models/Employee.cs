@@ -43,3 +43,18 @@ public class Receipt_Employee
         if (row.Table.Columns.Contains("Create_Date")) { Create_Date = row["Create_Date"].ToString(); }
     }
 }
+
+
+public class ReceiptEmployeeViewModel
+{
+    public string ID { get; set; }
+    public string Dish_Name { get; set; }
+    public string Emp_Name { get; set; }
+    public string Create_Date { get; set; }
+    public int Quantity { get; set; }
+
+    public ReceiptEmployeeViewModel()
+    {
+
+    }
+}
