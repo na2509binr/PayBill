@@ -50,6 +50,7 @@ body {
 }
 
 .lblMesSuc {
+    display: none;
     top: 7%;
     position: absolute;
     border: 1px;
@@ -58,14 +59,11 @@ body {
     font-weight: 900;
     background-color: #DFF0D8;
     color: #468847;
-    opacity: 0;
-    animation: fade-in 0.25s ease-in-out forwards, fade-out 0.5s ease-in-out forwards;
-    animation-delay: 0.1s, 4s;
-    animation-fill-mode: forwards;
 }
 
 .lblMesErr {
-    top: 7%;
+    display: none;
+    top: 2%;
     position: absolute;
     border: 1px;
     padding: 10px;
@@ -73,13 +71,32 @@ body {
     font-weight: 900;
     background-color: #DFF0D8;
     color: red;
+}
+
+.animeSuc {
+    text-align: center;
     opacity: 0;
     animation: fade-in 0.25s ease-in-out forwards, fade-out 0.5s ease-in-out forwards;
     animation-delay: 0.1s, 4s;
     animation-fill-mode: forwards;
 }
 
+.animeErr {
+    text-align:center;
+    opacity: 0;
+    animation: fade-in 0.25s ease-in-out forwards, fade-out 0.5s ease-in-out forwards;
+    animation-delay: 0.1s, 4s;
+    animation-fill-mode: forwards;
+    z-index: 4;
+}
+
 .con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.conErr {
     display: flex;
     justify-content: center;
     align-items: center;

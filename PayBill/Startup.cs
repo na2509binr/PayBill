@@ -41,6 +41,11 @@ namespace PayBill
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null; // Tắt camelCase nếu JSON của bạn không dùng camelCase
+            });
+        
             services.AddSession();
             services.AddControllersWithViews().AddRazorOptions(options =>
             {

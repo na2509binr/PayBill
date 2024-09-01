@@ -46,3 +46,24 @@ public class Receipt_Details
         if (row.Table.Columns.Contains("Create_Date")) { Create_Date = row["Create_Date"].ToString(); }
     }
 }
+
+public class ReceiptRequest
+{
+    public string html { get; set; }
+    public string billInput { get; set; }
+    public string idTable { get; set; }
+    public string paymentMethod { get; set; }
+    public ReceiptRequest()
+    {
+
+    }
+}
+
+public class ReceiptDetailsResponse
+{
+    public string message { get; set; }
+    public ReceiptDetailsResponse()
+    {
+
+    }
+}
