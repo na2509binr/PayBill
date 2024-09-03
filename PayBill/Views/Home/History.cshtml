@@ -4,7 +4,10 @@
 @{
     ViewData["Title"] = "Privacy Policy";
 }
-
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
 <style>
     /* Căn chỉnh bố cục */
     .carouselContainer {
@@ -77,6 +80,18 @@
     .input{
         width:10%;
     }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        margin-bottom: 0;
+    }
+
+    .btn-primary {
+        margin-top: 1rem;
+    }
 </style>
 
 <div>
@@ -104,7 +119,7 @@
     <!-- Container bao bọc các bảng để tạo hiệu ứng slide -->
     <div class="carouselContainer">
         <div class="carouselTables show" id="t1">
-            <form style="padding-top: 5px;" method="post" action="/Home/History">
+            @*<form style="padding-top: 5px;" method="post" action="/Home/History">
                 <div class="form-group row">
                     <div class="col-sm-4 row">
                         <label for="fromdte" class="col-sm-3 col-form-label">Từ ngày</label>
@@ -123,6 +138,24 @@
                     <div class="col-sm-4"></div>
                 </div>
                 <div style="padding: 8px 104px">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+            </form>*@
+            <form style="padding-top: 5px;" method="post" action="/Home/History">
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <label for="fromdte" class="col-form-label">Từ ngày</label>
+                        <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="todte" class="col-form-label">Đến ngày</label>
+                        <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <!-- Empty column for alignment -->
+                    </div>
+                </div>
+                <div class="text-center">
                     <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                 </div>
             </form>
@@ -208,6 +241,8 @@
     </div>
 
     @* --------------- Set value mặc định là ngày hiện tại --------------- *@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // Hàm để lấy ngày hiện tại và định dạng theo kiểu YYYY-MM-DD
         function getCurrentDate() {
@@ -219,7 +254,14 @@
             // return `${year}-${month}-${day}`;
             return `${day}/${month}/${year}`;
         }
-
+        flatpickr("#fromdte", {
+            dateFormat: "d/m/Y",
+            enableTime: false
+        });
+        flatpickr("#todte", {
+            dateFormat: "d/m/Y",
+            enableTime: false
+        });
         // Gán giá trị ngày hiện tại cho thuộc tính placeholder
         // document.getElementById("fromdte").placeholder = getCurrentDate();
         // document.getElementById("todte").placeholder = getCurrentDate();
