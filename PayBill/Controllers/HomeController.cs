@@ -57,18 +57,7 @@ namespace PayBill.Controllers
             try
             {
                 Receipt[] receipts;
-
-                //if ((fromdte == "" || fromdte is null) && (todte == "" || todte is null))
-                    receipts = _dbContext.Receipts.ToArray();  
-                //else if ((fromdte == "" || fromdte is null) || (todte == "" || todte is null))
-                //    if (fromdte == "" || fromdte is null)
-                //        receipts = _dbContext.Receipts.Where(x => DateTime.Parse(x.Create_Date) >= DateTime.Parse(fromdte)).ToArray();
-                //    else
-                //        receipts = _dbContext.Receipts.Where(x => DateTime.ParseExact(x.Create_Date, "dd-MM-yyyy", null) <= DateTime.ParseExact(todte, "dd-MM-yyyy", null)).ToArray();
-                //else
-                //    receipts = _dbContext.Receipts.Where(x => DateTime.Parse(x.Create_Date) >= DateTime.Parse(fromdte) && DateTime.Parse(x.Create_Date) <= DateTime.Parse(todte)).ToArray();
-
-
+                receipts = _dbContext.Receipts.ToArray();
                 var receiptsDetail = _dbContext.Receipt_Details.ToArray();
 
                 var query = from t1 in _dbContext.Receipt_Employees

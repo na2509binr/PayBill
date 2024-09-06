@@ -1,0 +1,83 @@
+﻿/* Căn chỉnh bố cục */
+.carouselContainer {
+    overflow: hidden;
+    position: relative;
+}
+
+.carouselTables {
+    display: none;
+    transition: transform 0.5s ease-in-out;
+}
+
+table {
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+}
+
+.show {
+    display: inline;
+}
+
+/* CSS để định dạng các thẻ p */
+p {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+.pagination {
+    margin-top: 10px;
+    display: flex;
+    padding-left: 0;
+    padding-bottom: 10px;
+    list-style: none;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+}
+
+    .pagination button {
+        margin: 2px;
+        padding: 5px 10px;
+    }
+
+        .pagination button.active {
+            background-color: blue;
+            color: white;
+        }
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.lbl {
+    width: 8%;
+}
+
+.input {
+    width: 10%;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    margin-bottom: 0;
+}
+
+.btn-primary {
+    margin-top: 1rem;
+}

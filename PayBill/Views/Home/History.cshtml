@@ -7,92 +7,10 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="~/css/History.css">
 </head>
-<style>
-    /* Căn chỉnh bố cục */
-    .carouselContainer {
-        overflow: hidden;
-        position: relative;
-    }
 
-    .carouselTables {
-        display: none;
-        transition: transform 0.5s ease-in-out;
-    }
 
-    table {
-        border-collapse: collapse;
-        background-color: #f2f2f2;
-    }
-
-    .show{
-        display: inline;
-    }
-
-    /* CSS để định dạng các thẻ p */
-    p {
-        cursor: pointer;
-        color: blue;
-        text-decoration: underline;
-        margin-bottom: 10px;
-    }
-
-    .pagination {
-        margin-top: 10px;
-        display: flex;
-        padding-left: 0;
-        padding-bottom: 10px;
-        list-style: none;
-        flex-direction: row;
-        align-items: baseline;
-        justify-content: center;
-    }
-
-        .pagination button {
-            margin: 2px;
-            padding: 5px 10px;
-        }
-
-            .pagination button.active {
-                background-color: blue;
-                color: white;
-            }
-
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        padding: 8px;
-        text-align: left;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .lbl{
-        width:8%;
-    }
-
-    .input{
-        width:10%;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-control {
-        margin-bottom: 0;
-    }
-
-    .btn-primary {
-        margin-top: 1rem;
-    }
-</style>
 
 <div>
     @if (!string.IsNullOrEmpty(Model.message))
@@ -106,59 +24,32 @@
         <li class="nav-item">
             <p class="nav-link active" id="1">Hóa đơn</p>
         </li>
-@*         <li class="nav-item">
-            <p class="nav-link" id="2">Chi tiết hóa đơn</p>
-        </li> *@
         <li class="nav-item">
             <p class="nav-link" id="2">Hóa đơn nhân viên</p>
         </li>
     </ul>
 
-    <br/>
+    <br />
 
     <!-- Container bao bọc các bảng để tạo hiệu ứng slide -->
     <div class="carouselContainer">
         <div class="carouselTables show" id="t1">
-            @*<form style="padding-top: 5px;" method="post" action="/Home/History">
-                <div class="form-group row">
-                    <div class="col-sm-4 row">
-                        <label for="fromdte" class="col-sm-3 col-form-label">Từ ngày</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="" required>
-                        </div>
-                        <div class="col-sm-3"></div>
-                    </div>
-                    <div class="col-sm-4 row">
-                        <label for="todte1" class="col-sm-3 col-form-label">Đến ngày</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="todte" name="todte" placeholder="" required>
-                        </div>
-                        <div class="col-sm-3"></div>
-                    </div>
-                    <div class="col-sm-4"></div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
                 </div>
-                <div style="padding: 8px 104px">
-                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
                 </div>
-            </form>*@
-            <form style="padding-top: 5px;" method="post" action="/Home/History">
-                <div class="form-group row">
-                    <div class="col-sm-4">
-                        <label for="fromdte" class="col-form-label">Từ ngày</label>
-                        <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="todte" class="col-form-label">Đến ngày</label>
-                        <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- Empty column for alignment -->
-                    </div>
+                <div class="col-sm-4">
+                    <!-- Empty column for alignment -->
                 </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                </div>
-            </form>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;" onclick="fillterDate('t1', 'table1');">Tìm kiếm</button>
+            </div>
 
             <table class="table" id="table1">
                 <thead class="thead-dark">
@@ -187,37 +78,31 @@
             </div>
         </div>
         <div class="carouselTables" id="t2">
-            <form style="padding-top: 5px;" method="post" action="/Home/History">
-                <div class="form-group row">
-                    <div class="col-sm-4 row">
-                        <label for="fromdte" class="col-sm-3 col-form-label">Từ ngày</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="" required>
-                        </div>
-                        <div class="col-sm-3"></div>
-                    </div>
-                    <div class="col-sm-4 row">
-                        <label for="todte" class="col-sm-3 col-form-label">Đến ngày</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="todte" name="todte" placeholder="" required>
-                        </div>
-                        <div class="col-sm-3"></div>
-                    </div>
-                    <div class="col-sm-4"></div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
                 </div>
-                <div style="padding: 8px 104px;">
-                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
                 </div>
-            </form>
+                <div class="col-sm-4">
+                    <!-- Empty column for alignment -->
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;" onclick="fillterDate('t2', 'table2');">Tìm kiếm</button>
+            </div>
 
             <table class="table" id="table2">
                 <thead class="thead-dark">
                     <tr>
                         <th onclick="sortTable(1)" class="center">Mã hóa đơn</th>
-                        <th onclick="sortTable(2)" class="center">Mã món ăn</th>
-                        <th onclick="sortTable(3)" class="center">Mã nhân viên</th>
-                        <th onclick="sortTable(4)" class="center">Số lượng</th>
                         <th onclick="sortTable(5)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Món ăn</th>
+                        <th onclick="sortTable(3)" class="center">Nhân viên</th>
+                        <th onclick="sortTable(4)" class="center">Số lượng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -225,10 +110,10 @@
                     {
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
                             <td>@Html.DisplayFor(modelItem => item.Dish_Name)</td>
                             <td>@Html.DisplayFor(modelItem => item.Emp_Name)</td>
                             <td class="right">@Html.DisplayFor(modelItem => item.Quantity)</td>
-                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
                         </tr>
                     }
                 </tbody>
@@ -243,185 +128,6 @@
     @* --------------- Set value mặc định là ngày hiện tại --------------- *@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        // Hàm để lấy ngày hiện tại và định dạng theo kiểu YYYY-MM-DD
-        function getCurrentDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần cộng thêm 1
-            const day = String(today.getDate()).padStart(2, '0');
 
-            // return `${year}-${month}-${day}`;
-            return `${day}/${month}/${year}`;
-        }
-        flatpickr("#fromdte", {
-            dateFormat: "d/m/Y",
-            enableTime: false
-        });
-        flatpickr("#todte", {
-            dateFormat: "d/m/Y",
-            enableTime: false
-        });
-        // Gán giá trị ngày hiện tại cho thuộc tính placeholder
-        // document.getElementById("fromdte").placeholder = getCurrentDate();
-        // document.getElementById("todte").placeholder = getCurrentDate();
-        document.getElementById("todte").value = getCurrentDate();
-    </script>
-
-    @* --------------- Định dạng bảng dữ liệu --------------- *@
-    <script>
-        function formatTotalPrice() {
-            // Lấy bảng theo ID
-            var table = document.getElementById("table1");
-
-            // Lặp qua từng hàng trong tbody
-            var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-            for (var i = 0; i < rows.length; i++) {
-                // Lấy cột thứ 3 (Price)
-                var cell = rows[i].getElementsByTagName("td")[2];
-
-                // Lấy giá trị hiện tại của cột
-                var price = parseFloat(cell.innerText);
-
-                // Định dạng lại số, ví dụ: thêm dấu phân cách hàng nghìn và 2 chữ số thập phân
-                var formattedPrice = price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-
-                // Gán lại giá trị đã định dạng vào cột
-                cell.innerText = formattedPrice;
-            }
-        }
-
-        function formatMethod() {
-            // Lấy bảng theo ID
-            var formattedMethod = '';
-            var table = document.getElementById("table1");
-
-            // Lặp qua từng hàng trong tbody
-            var rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-            for (var i = 0; i < rows.length; i++) {
-                // Lấy cột thứ 3 (Price)
-                var cell = rows[i].getElementsByTagName("td")[3];
-
-                // Lấy giá trị hiện tại của cột
-                var method = parseFloat(cell.innerText);
-
-                switch (method) {
-                    case 1:
-                        formattedMethod = "Tiền mặt";
-                        break;
-                    case 2:
-                        formattedMethod = "Chuyển khoản";
-                        break;
-                    case 3:
-                        formattedMethod = "Credit Card";
-                        break;
-                    default:
-                        formattedMethod = "";                      
-                }
-
-                cell.innerText = formattedMethod;
-            }
-        }
-
-        // Gọi hàm để thực thi khi cần
-        formatTotalPrice();
-        formatMethod();
-    </script>
-    @* --------------- Phân trang bảng --------------- *@
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function paginate(tableId, paginationId, itemsPerPage) {
-                const table = document.getElementById(tableId);
-                const tbody = table.querySelector('tbody');
-                const pagination = document.getElementById(paginationId);
-                const rows = table.getElementsByTagName('tr');
-                const totalPages = Math.ceil(rows.length / itemsPerPage);
-
-                function showPage(page) {
-                    for (let i = 0; i < rows.length; i++) {
-                        rows[i].style.display = (i >= (page - 1) * itemsPerPage && i < page * itemsPerPage) ? '' : 'none';
-                    }
-
-                    const buttons = pagination.getElementsByTagName('button');
-                    for (let i = 0; i < buttons.length; i++) {
-                        buttons[i].classList.remove('active');
-                    }
-                    buttons[page - 1].classList.add('active');
-                }
-
-                function createPagination() {
-                    pagination.innerHTML = '';
-                    for (let i = 1; i <= totalPages; i++) {
-                        const button = document.createElement('button');
-                        button.classList.add('btn');
-                        button.innerText = i;
-                        button.addEventListener('click', function () {
-                            showPage(i);
-                        });
-                        pagination.appendChild(button);
-                    }
-                    showPage(1); // Show the first page by default
-                }
-
-                createPagination();
-            }
-
-            // Apply pagination to both tables
-            paginate('table1', 'pagination1', 10);
-            paginate('table2', 'pagination2', 10);
-            paginate('table3', 'pagination3', 10);
-        });
-
-
-
-
-    </script>
-
-    @* --------------- Chuyển tag và hiển thị table tương ứng --------------- *@
-    <script>
-        // Lấy tất cả các thẻ li trong ul
-        const listTag = document.querySelectorAll('.tagBar li p');
-        const listTable = document.querySelectorAll('.carouselTables');
-
-        // Hàm xử lý khi nhấp vào thẻ li
-        function handleClick(event) {
-            // Xóa class 'active' khỏi tất cả các thẻ li
-            listTag.forEach(item => item.classList.remove('active'));
-
-            // Thêm class 'active' vào thẻ li được nhấp
-            event.target.classList.add('active');
-            console.log(event.target.id);
-
-            listTable.forEach(item => item.classList.remove('show'));
-            const tableToShow = document.getElementById("t"+event.target.id);
-            if (tableToShow) {
-                tableToShow.classList.add('show');
-            }
-        }
-
-        // Gán sự kiện click cho tất cả các thẻ li
-        listTag.forEach(item => item.addEventListener('click', handleClick));
-    </script>
-
-    @* --------------- Sắp xếp cột trong bảng --------------- *@
-    <script>
-        function sortTable(columnIndex) {
-            const table = document.getElementById("table1");
-            const rows = Array.from(table.rows).slice(1);
-            const isAscending = table.rows[0].cells[columnIndex].classList.toggle("asc");
-
-            rows.sort((rowA, rowB) => {
-                const cellA = rowA.cells[columnIndex].textContent.trim();
-                const cellB = rowB.cells[columnIndex].textContent.trim();
-
-                if (!isNaN(cellA) && !isNaN(cellB)) {
-                    return isAscending ? cellA - cellB : cellB - cellA;
-                }
-
-                return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-            });
-
-            rows.forEach(row => table.tBodies[0].appendChild(row));
-        }
-    </script>
+    <script src="~/js/History.js"></script>
 </div>
