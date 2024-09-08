@@ -12,6 +12,7 @@ public class PayBillDbContext : DbContext
     public DbSet<Dish> Dishes { get; set; }
     public DbSet<Tables> Tables { get; set; }
     public DbSet<Receipt_Employee> Receipt_Employees { get; set; }
+    public DbSet<Spending> Spendings { get; set; }
     //private readonly DbContextOptions<PayBillDbContext> _options;
 
     public PayBillDbContext(DbContextOptions<PayBillDbContext> options) : base(options) { }
@@ -25,5 +26,6 @@ public class PayBillDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ReceiptDetailsEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TableEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ReceiptEmployeeEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SpendingEntityTypeConfiguration());
     }
 }
