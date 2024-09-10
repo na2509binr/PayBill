@@ -1,50 +1,61 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PayBill.Data;
+using PayBill.Handle.OracleDB;
 using PayBill.Models;
+using X.PagedList;
 
 namespace PayBill.Controllers
 {
-    public class SpendingController : Controller
+    public class EmployeeController : Controller
     {
-        private readonly PayBillDbContext _context;
+        private readonly ILogger<EmployeeController> _logger;
+        private readonly PayBillDbContext _dbContext;
+        clsDb _clsDb;
 
-        public SpendingController(PayBillDbContext context)
+        public EmployeeController(ILogger<EmployeeController> logger, PayBillDbContext dbContext)
         {
-            _context = context;
+            _logger = logger;
+            _dbContext = dbContext;
         }
 
-
-        // GET: SpendingController
+        // GET: EmployeeController
         public ActionResult Index()
         {
-            return View("Spending");
+            _clsDb = new clsDb();
+            Dish[] arrDishes = _dbContext.Dishes.Where(c => c.Is_For_Employee == 1).ToArray();
+            Employee[] arrEmployee = _dbContext.Employees.ToArray();
+
+            GetDataToViewModel getDataModel = new GetDataToViewModel();
+            getDataModel.employeeList = arrEmployee.ToPagedList<Employee>();
+            getDataModel.dishesList = arrDishes.ToPagedList<Dish>();
+            getDataModel.message = TempData["Message"] as string;
+
+            return View("Index", getDataModel);
         }
 
-        // GET: SpendingController/Details/5
+        // GET: EmployeeController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: SpendingController/Create
+        // GET: EmployeeController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SpendingController/Create
+        // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Spending collection)
+        public ActionResult Create(Employee collection)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    collection.Spending_ID = $"{DateTime.Now.ToString()}:{collection.SpendingType}";
-                    _context.Add(collection);
-                    _context.SaveChanges();
-
+                    _dbContext.Employees.Add(collection);
+                    _dbContext.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -55,13 +66,13 @@ namespace PayBill.Controllers
             else { return View(); }
         }
 
-        // GET: SpendingController/Edit/5
+        // GET: EmployeeController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Edit/5
+        // POST: EmployeeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -76,13 +87,13 @@ namespace PayBill.Controllers
             }
         }
 
-        // GET: SpendingController/Delete/5
+        // GET: EmployeeController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Delete/5
+        // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

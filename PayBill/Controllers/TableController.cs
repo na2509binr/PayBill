@@ -1,50 +1,58 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PayBill.Data;
 using PayBill.Models;
+using X.PagedList;
 
 namespace PayBill.Controllers
 {
-    public class SpendingController : Controller
+    public class TableController : Controller
     {
-        private readonly PayBillDbContext _context;
+        private readonly PayBillDbContext _dbContext;
 
-        public SpendingController(PayBillDbContext context)
+        public TableController(PayBillDbContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
 
-        // GET: SpendingController
+        // GET: TableController
         public ActionResult Index()
         {
-            return View("Spending");
+            var dishes = _dbContext.Dishes.ToArray();
+            var tables = _dbContext.Tables.ToArray();
+
+            GetDataToViewModel getDataModel = new GetDataToViewModel();
+            getDataModel.tablesList = tables.ToPagedList<Tables>();
+            getDataModel.dishesList = dishes.ToPagedList<Dish>();
+            getDataModel.message = TempData["Message"] as string;
+
+            return View("Index", getDataModel);
         }
 
-        // GET: SpendingController/Details/5
+        // GET: TableController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: SpendingController/Create
+        // GET: TableController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SpendingController/Create
+        // POST: TableController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Spending collection)
+        public ActionResult Create(Tables table)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    collection.Spending_ID = $"{DateTime.Now.ToString()}:{collection.SpendingType}";
-                    _context.Add(collection);
-                    _context.SaveChanges();
-
+                    _dbContext.Tables.Add(table);
+                    _dbContext.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -55,13 +63,13 @@ namespace PayBill.Controllers
             else { return View(); }
         }
 
-        // GET: SpendingController/Edit/5
+        // GET: TableController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Edit/5
+        // POST: TableController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -76,13 +84,13 @@ namespace PayBill.Controllers
             }
         }
 
-        // GET: SpendingController/Delete/5
+        // GET: TableController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Delete/5
+        // POST: TableController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

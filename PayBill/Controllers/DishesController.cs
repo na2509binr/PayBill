@@ -1,50 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PayBill.Data;
 using PayBill.Models;
 
 namespace PayBill.Controllers
 {
-    public class SpendingController : Controller
+    public class DishesController : Controller
     {
         private readonly PayBillDbContext _context;
 
-        public SpendingController(PayBillDbContext context)
+        public DishesController(PayBillDbContext context)
         {
             _context = context;
         }
-
-
-        // GET: SpendingController
+        // GET: DishesController
         public ActionResult Index()
         {
-            return View("Spending");
+            var dishes = _context.Dishes.ToList();
+            return View(dishes);
         }
 
-        // GET: SpendingController/Details/5
+        // GET: DishesController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: SpendingController/Create
+        // GET: DishesController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SpendingController/Create
+        // POST: DishesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Spending collection)
+        public ActionResult Create(Dish collection)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    collection.Spending_ID = $"{DateTime.Now.ToString()}:{collection.SpendingType}";
-                    _context.Add(collection);
+                    _context.Dishes.Add(collection);
                     _context.SaveChanges();
-
                     return RedirectToAction(nameof(Index));
                 }
                 catch
@@ -55,13 +53,13 @@ namespace PayBill.Controllers
             else { return View(); }
         }
 
-        // GET: SpendingController/Edit/5
+        // GET: DishesController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Edit/5
+        // POST: DishesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -76,13 +74,13 @@ namespace PayBill.Controllers
             }
         }
 
-        // GET: SpendingController/Delete/5
+        // GET: DishesController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: SpendingController/Delete/5
+        // POST: DishesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

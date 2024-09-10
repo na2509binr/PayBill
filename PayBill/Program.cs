@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PayBill.Data;
+using PayBill.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.AddDbContext<PayBillDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
-
+builder.Services.AddSingletonService();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,9 +28,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.InitialMemory();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Login}/{id?}");
+app.InitialMemory();
 
 app.Run();

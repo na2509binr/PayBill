@@ -1,0 +1,26 @@
+﻿@model PayBill.Models.Employee
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>Create Employee</h1>
+
+<form asp-action="Create" method="post">
+    <!-- Dish Name -->
+    <div class="form-group">
+        <label asp-for="Employee_Name" class="control-label"></label>
+        <input asp-for="Employee_Name" class="form-control" />
+        <span asp-validation-for="Employee_Name" class="text-danger"></span>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+        <input type="submit" value="Submit" class="button" />
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

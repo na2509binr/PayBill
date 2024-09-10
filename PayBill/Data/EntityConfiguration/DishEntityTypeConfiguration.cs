@@ -8,7 +8,8 @@ public class DishEntityTypeConfiguration : IEntityTypeConfiguration<Dish>
     public void Configure(EntityTypeBuilder<Dish> builder)
     {
         builder.HasKey(e => e.ID_Dish);
-
+        builder.Property(e => e.ID_Dish)
+           .ValueGeneratedOnAdd();
         builder.ToTable("T_Dish");
         builder.Ignore(e => e.TotalPrice);
     }

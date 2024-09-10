@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Dish>
+
+<h2>Danh sách các món ăn</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên món ăn</th>
+            <th>Dành cho nhân viên</th>
+            <th>Giá món ăn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dish in Model)
+        {
+            <tr>
+                <td>@dish.Dish_Name</td>
+                <td>@(dish.Is_For_Employee == 1 ? "Có" : "Không")</td>
+                <td>@dish.Dish_Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Button to navigate to Create page -->
+<a asp-action="Create" class="btn btn-primary mt-3">Thêm món ăn</a>

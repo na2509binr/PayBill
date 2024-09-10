@@ -1,11 +1,10 @@
 ﻿@model PayBill.Models.GetDataToViewModel;
-
 @using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Privacy Policy";
 }
 
-<link rel="stylesheet" href="~/css/Booking.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Employee.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/site.css" />
 
 <div>
@@ -22,14 +21,14 @@
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < Model.tablesList.Count(); i++)
+            @for (int i = 0; i < Model.employeeList.Count(); i++)
             {
                 var tableClass = "dataGridPopup" + i;
-                var desk = @Html.DisplayFor(modelItem => Model.tablesList[i].NameTable);
-                var id = @Html.DisplayFor(modelItem => Model.tablesList[i].ID);
+                var desk = @Html.DisplayFor(modelItem => Model.employeeList[i].Employee_Name);
+                var id = @Html.DisplayFor(modelItem => Model.employeeList[i].ID_Employee);
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => Model.tablesList[i].ID)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.tablesList[i].NameTable)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.employeeList[i].ID_Employee)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.employeeList[i].Employee_Name)</td>
                     <td><button id="tbl" type="button" class="button" onclick="openPopup('@tableClass', '@desk');" data-table="@id">Chi tiết</button></td>
                 </tr>
             }
@@ -45,7 +44,7 @@
 </div>
 
 <div class="popup" id="popup">
-    @for (int i = 0; i < Model.tablesList.Count(); i++)
+    @for (int i = 0; i < Model.employeeList.Count(); i++)
     {
         var tableClass = "dataGridPopup" + i;
         <table id="dataGridPopup" class="@tableClass" style="width: 100%;">
@@ -107,4 +106,6 @@
     }
 </div>
 
-<script src="~/js/Booking.js" asp-append-version="true"></script>
+<!-- Button to navigate to Create page -->
+<a asp-action="Create" class="button mt-3">Thêm Nhân Viên</a>
+<script src="~/js/Employee.js" asp-append-version="true"></script>

@@ -13,5 +13,6 @@ namespace PayBill.Models
         public IPagedList<Receipt_Details> receiptDetailList { get; set; }
         public IPagedList<Receipt_Employee> receiptEmployeeList { get; set; }
         public IPagedList<ReceiptEmployeeViewModel> receiptEmployeeModelList { get; set; }
+        public IPagedList<Spending> SpendingModelList { get; set; }
     }
 }

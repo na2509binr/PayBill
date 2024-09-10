@@ -59,7 +59,7 @@ namespace PayBill.Controllers
                 Receipt[] receipts;
                 receipts = _dbContext.Receipts.ToArray();
                 var receiptsDetail = _dbContext.Receipt_Details.ToArray();
-
+                var spending = _dbContext.Spendings.ToArray();
                 var query = from t1 in _dbContext.Receipt_Employees
                             join t2 in _dbContext.Dishes on t1.ID_Dish equals t2.ID_Dish
                             join t3 in _dbContext.Employees on t1.ID_Employee equals t3.ID_Employee
@@ -79,6 +79,7 @@ namespace PayBill.Controllers
                 getDataModel.receiptList = receipts.ToPagedList<Receipt>();
                 getDataModel.receiptDetailList = receiptsDetail.ToPagedList<Receipt_Details>();
                 getDataModel.receiptEmployeeModelList = receiptEmployeeModel.ToPagedList<ReceiptEmployeeViewModel>();
+                getDataModel.SpendingModelList = spending.ToPagedList<Spending>();
                 getDataModel.message = TempData["Message"] as string;
                 return View("History", getDataModel);
             }
