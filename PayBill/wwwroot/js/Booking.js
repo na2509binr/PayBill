@@ -38,10 +38,11 @@ function calculateBill(tableClass) {
     const totals = document.querySelectorAll(`#popup .${tableClass} tbody tr td .total`);
     let sum = 0;
 
+    // Tính tổng giá trị của các món ăn
     totals.forEach(total => {
         const value = parseInt(total.textContent.replace(/,/g, ''));
         if (!isNaN(value)) {
-            sum += value;
+            sum += value;  // Cộng dồn giá trị các món ăn
         }
     });
 
@@ -51,7 +52,7 @@ function calculateBill(tableClass) {
 function addEventClick(tableClass) {
     const incrementButtons = document.querySelectorAll('.increment');
     const decrementButtons = document.querySelectorAll('.decrement');
-
+    const vatCheckBox = document.querySelectorAll('.vat-check-box');
     incrementButtons.forEach((button, index) => {
         button.addEventListener('click', incrementHandler(tableClass, index));
     });
@@ -59,7 +60,21 @@ function addEventClick(tableClass) {
     decrementButtons.forEach((button, index) => {
         button.addEventListener('click', decrementHandler(tableClass, index));
     });
+    vatCheckBox.forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function () {
+            var totalBillDom = document.querySelector(`#popup .${tableClass} tfoot tr td .bill`);
+            var valueTotalBill = parseInt(totalBillDom.textContent.replace(/,/g, ''));
 
+            if (this.checked) {
+                var currentValue = Math.round(valueTotalBill * 1.1);
+            }
+            else {
+                var currentValue = Math.round(valueTotalBill / 1.1);
+            }
+            totalBillDom.textContent = currentValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });;
+            //totalBillDom.textContent = currentValue;
+        });
+    });
 }
 
 function removeEventClick(tableClass) {
@@ -185,6 +200,74 @@ document.querySelectorAll('#pay').forEach(button => {
             });
     });
 });
+
+
+// Khi nhấn nút "Xem trước Hóa Đơn"
+document.querySelectorAll('.view-invoice').forEach(button => {
+    button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const tableId = this.getAttribute('data-table'); // Lấy ID bảng
+
+        // Lấy thông tin món ăn từ popup hiện tại
+        const selectedDishes = [];
+
+        const rows = document.querySelectorAll(`#popup .dataGridPopup${tableId} tbody tr`);
+        rows.forEach(row => {
+            const dishName = row.querySelector('td:nth-child(2)').textContent; // Tên món
+            const dishPrice = parseFloat(row.querySelector('.price').textContent.replace('đ', '').trim()); // Giá món
+            const quantity = parseInt(row.querySelector('.number').textContent); // Số lượng
+            const total = parseFloat(row.querySelector('.total').textContent.replace('đ', '').trim()); // Thành tiền
+
+            if (quantity > 0) { // Chỉ lấy những món có số lượng > 0
+                selectedDishes.push({ dishName, quantity, dishPrice, total });
+            }
+        });
+        const paymentMethod = document.querySelector(`.dataGridPopup${tableId} .slt`).id;
+        // Hiển thị thông tin vào popup "Xem trước hóa đơn"
+        const invoiceItemsContainer = document.getElementById('invoice-items');
+        const totalAmountElement = document.getElementById('total-amount');
+
+        // Dọn sạch nội dung cũ
+        invoiceItemsContainer.innerHTML = '';
+
+        let totalAmount = 0;
+        selectedDishes.forEach((dish, index) => {
+            totalAmount += dish.total;
+
+            const row = document.createElement('tr');
+            row.classList.add('item');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${dish.dishName}</td>
+                <td>${dish.quantity}</td>
+                <td>${dish.dishPrice}đ</td>
+                <td>${dish.total}đ</td>
+            `;
+            invoiceItemsContainer.appendChild(row);
+        });
+
+        // Cập nhật tổng thanh toán
+        //totalAmountElement.textContent = totalAmount + 'đ';
+
+        // Hiển thị popup "Xem trước hóa đơn"
+        document.getElementById('invoice-popup').style.display = 'flex';
+    });
+});
+
+// Đóng popup khi nhấn ra ngoài
+document.getElementById('invoice-popup').addEventListener('click', function (event) {
+    // Nếu click vào vùng ngoài của popup, đóng popup
+    if (event.target === this) {
+        closeInvoicePopup();
+    }
+});
+
+// Hàm đóng popup Xem hóa đơn
+function closeInvoicePopup() {
+    const popup = document.getElementById('invoice-popup');
+    popup.style.display = 'none'; // Ẩn popup
+}
+
 
 function formatNumber() {
     document.querySelectorAll('.price').forEach(price => {

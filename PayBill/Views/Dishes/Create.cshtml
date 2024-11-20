@@ -5,12 +5,12 @@
 @{
 }
 
-<h1>Create Spending</h1>
+<h1>Thêm món ăn</h1>
 
 <form asp-action="Create" method="post">
     <!-- Dish Name -->
     <div class="form-group">
-        <label asp-for="Dish_Name" class="control-label"></label>
+        <label asp-for="Dish_Name" class="control-label">Tên món</label>
         <input asp-for="Dish_Name" class="form-control" />
         <span asp-validation-for="Dish_Name" class="text-danger"></span>
     </div>
@@ -31,15 +31,17 @@
 
     <!-- Dish Price -->
     <div class="form-group">
-        <label asp-for="Dish_Price" class="control-label"></label>
+        <label asp-for="Dish_Price" class="control-label">Giá</label>
         <input asp-for="Dish_Price" class="form-control" type="number" step="1" />
         <span asp-validation-for="Dish_Price" class="text-danger"></span>
     </div>
 
     <!-- Submit Button -->
     <div class="form-group">
-        <input type="submit" value="Submit" class="button" />
+        <button type="submit" class="btn btn-primary mt-3 button">Xác nhận</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary mt-3 button">Hủy</a>
     </div>
+
 </form>
 
 @section Scripts {

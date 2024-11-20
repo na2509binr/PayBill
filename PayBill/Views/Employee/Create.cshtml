@@ -5,12 +5,12 @@
 @{
 }
 
-<h1>Create Employee</h1>
+<h1>Thêm nhân viên</h1>
 
 <form asp-action="Create" method="post">
     <!-- Dish Name -->
     <div class="form-group">
-        <label asp-for="Employee_Name" class="control-label"></label>
+        <label asp-for="Employee_Name" class="control-label"> Tên Nhân viên</label>
         <input asp-for="Employee_Name" class="form-control" />
         <span asp-validation-for="Employee_Name" class="text-danger"></span>
     </div>

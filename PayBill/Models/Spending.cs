@@ -17,8 +17,9 @@ public enum SpendingType
 {
     Wine,
     Grocery,
-    Maintain,
-    Policy,
-    Discount,
+    SacrificialOfferings,
+    BillExtract,
+    LoanEmployee,
+    Csvc,
     Hdd
 }

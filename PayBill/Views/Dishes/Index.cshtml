@@ -17,10 +17,14 @@
                 <td>@dish.Dish_Name</td>
                 <td>@(dish.Is_For_Employee == 1 ? "Có" : "Không")</td>
                 <td>@dish.Dish_Price</td>
+                <td>
+                    <!-- Link sửa món ăn -->
+                    <a asp-action="Edit" asp-route-id="@dish.ID_Dish" class="btn btn-warning button">Sửa</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 <!-- Button to navigate to Create page -->
-<a asp-action="Create" class="btn btn-primary mt-3">Thêm món ăn</a>
+<a asp-action="Create" class="btn btn-primary mt-3 button">Thêm món ăn</a>

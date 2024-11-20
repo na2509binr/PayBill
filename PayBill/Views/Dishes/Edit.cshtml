@@ -1,0 +1,35 @@
+﻿@model Dish
+
+<h2>Sửa món ăn</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="ID_Dish" value="@Model.ID_Dish" />
+    <div class="form-group">
+        <label for="Dish_Name">Tên món ăn:</label>
+        <input type="text" class="form-control" id="Dish_Name" name="Dish_Name" value="@Model.Dish_Name" required />
+    </div>
+    <div class="form-group">
+        <label for="Is_For_Employee">Dành cho nhân viên:</label>
+        <select class="form-control" id="Is_For_Employee" name="Is_For_Employee">
+             <option value="1" >Có</option>
+             <option value="0" >Không</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Dish_Price">Giá món ăn:</label>
+        <input type="number" class="form-control" id="Dish_Price" name="Dish_Price" value="@Model.Dish_Price" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3 button">Lưu</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary mt-3 button">Hủy</a>
+</form>
+
+<script>
+    // Lắng nghe sự kiện thay đổi (change) trên thẻ <select>
+    document.getElementById('Is_For_Employee').addEventListener('change', function () {
+        // Lấy giá trị của tùy chọn đã chọn
+        var selectedValue = this.value;
+        @Model.Is_For_Employee = selectedValue;
+        // Hiển thị giá trị đã chọn (hoặc có thể xử lý theo yêu cầu)
+        console.log("Giá trị đã chọn: " + selectedValue);
+    });
+</script>

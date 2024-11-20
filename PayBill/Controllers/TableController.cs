@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PayBill.Data;
 using PayBill.Models;
+using System.Diagnostics;
 using X.PagedList;
 
 namespace PayBill.Controllers
@@ -103,6 +104,34 @@ namespace PayBill.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult Login(string username, string password)
+        {
+            if (username == "admin" && password == "sa123")
+            {
+                return RedirectToAction("Index", "Table");
+            }
+            else if (username == null && password == null)
+            {
+
+            }
+            else if (username == null || password == null)
+            {
+                ViewBag.Error = "Vui lòng nhập tên tài khoản hoặc mật khẩu!";
+            }
+            else if (username != "admin" || password != "password")
+            {
+                ViewBag.Error = "Tên tài khoản hoặc mật khẩu không đúng!";
+            }
+
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

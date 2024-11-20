@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IReceiptService, ReceiptService>();
         services.AddSingleton<PayBillMemoryContext>();
+        services.AddSingleton<IDbServices, DbServices>();
         return services;
     }
 }

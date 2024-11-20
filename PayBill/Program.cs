@@ -32,7 +32,7 @@ app.InitialMemory();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Login}/{id?}");
+    pattern: "{controller=Table}/{action=Login}/{id?}");
 app.InitialMemory();
 
 app.Run();

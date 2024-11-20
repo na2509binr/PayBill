@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PayBill.Data;
 using PayBill.Models;
+using ZstdSharp.Unsafe;
 
 namespace PayBill.Controllers
 {
@@ -53,25 +54,42 @@ namespace PayBill.Controllers
             else { return View(); }
         }
 
-        // GET: DishesController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var dish = _context.Dishes.Find(id);  // Lấy món ăn từ dịch vụ.
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);  // Trả về view với mô hình Dish.
         }
 
         // POST: DishesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, Dish updatedDish)
         {
-            try
+            if (id != updatedDish.ID_Dish)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _context.Dishes.Update(updatedDish);  // Cập nhật món ăn trong cơ sở dữ liệu.
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));  // Sau khi sửa xong, chuyển về trang Index.
+                }
+                catch (Exception)
+                {
+                    // Handle errors (ví dụ như khi có lỗi cập nhật).
+                    return View(updatedDish);
+                }
             }
+            return View(updatedDish);
         }
 
         // GET: DishesController/Delete/5

@@ -1,0 +1,298 @@
+﻿@model PayBill.Models.GetDataToViewModel;
+
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="~/css/History.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+
+    </style>
+</head>
+
+
+
+<div>
+    @if (!string.IsNullOrEmpty(Model.message))
+    {
+        <div class="con">
+            <asp:Label class="lblMesDataGrid" Visible="false">@Html.DisplayFor(modelItem => Model.message)</asp:Label>
+        </div>
+    }
+    <h1>Tra cứu hóa đơn</h1>
+    <ul class="nav nav-tabs tagBar">
+        <li class="nav-item">
+            <p class="nav-link active" id="4">Tổng hợp</p>
+        </li>
+        <li class="nav-item">
+            <p class="nav-link active" id="1">Hóa đơn</p>
+        </li>
+        <li class="nav-item">
+            <p class="nav-link" id="2">Hóa đơn nhân viên</p>
+        </li>
+        <li class="nav-item">
+            <p class="nav-link" id="3">Chi tiêu</p>
+        </li>
+    </ul>
+
+    <br />
+
+    <!-- Container bao bọc các bảng để tạo hiệu ứng slide -->
+    <div class="carouselContainer">
+        <div class="carouselTables" id="t4">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="button" style="position: absolute; bottom: 0; left: 0;" onclick="fillterDate('t4', 'table4');">
+                        Tìm kiếm
+                    </button>
+                    <!-- Empty column for alignment -->
+                </div>
+            </div>
+
+            <table class="table" id="table4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(1)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Tổng Thu</th>
+                        <th onclick="sortTable(3)" class="center">Tiền Mặt</th>
+                        <th onclick="sortTable(4)" class="center">Chuyển Khoản</th>
+                        <th onclick="sortTable(5)" class="center">Credit Card</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ReceiptSummaryDtos)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.Day)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.TotalPrice)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.TotalCashAmount)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalBankTransfer)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalCreditCard)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination4">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+
+            <table class="table" id="table5">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(1)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Tổng Chi</th>
+                        <th onclick="sortTable(3)" class="center">Rượu</th>
+                        <th onclick="sortTable(4)" class="center">Tạp Hóa</th>
+                        <th onclick="sortTable(5)" class="center">Đồ Lễ</th>
+                        <th onclick="sortTable(6)" class="center">Trích Bill</th>
+                        <th onclick="sortTable(7)" class="center">Mượn NV</th>
+                        <th onclick="sortTable(8)" class="center">CSCV</th>
+                        <th onclick="sortTable(9)" class="center">HDD</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SpendingSummaryDtos)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.SpendingDay)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.TotalSpending)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.TotalWine)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalGlocery)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalSacrificialOfferings)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalBillExtract)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalLoanEmployee)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalCsvc)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TotalHdd)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination4">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+        <div class="carouselTables show" id="t1">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4" style="position: relative;">
+                    <button type="submit" class="button" style="position: absolute; bottom: 0; left: 0;" onclick="fillterDate('t1', 'table1');">
+                        Tìm kiếm
+                    </button>
+                </div>
+                @* <div class="col-sm-4">
+
+                </div> *@
+            </div>
+
+            <table class="table" id="table1">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(0)" class="center">Invoice NO</th>
+                        <th onclick="sortTable(1)" class="center">Created Date</th>
+                        <th onclick="sortTable(2)" class="center">Total</th>
+                        <th onclick="sortTable(3)" class="center">Payment Method</th>
+                        <th onclick="sortTable(3)" class="center">Invoice </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.receiptList)
+                    {
+                        <tr>
+                            <td scope="row">@Html.DisplayFor(modelItem => item.ID_Receipt)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.Total_Price)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Payment_Methods)</td>
+                            <td>
+                                <button class="button" style="--clr: #7808d0" onclick="window.location.href='@Url.Action("PrintPreview", "Invoices", new { receiptId = item.ID_Receipt })'">
+                                    <span class="button__icon-wrapper">
+                                        <svg viewBox="0 0 14 15"
+                                             fill="none"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             class="button__icon-svg"
+                                             width="10">
+                                            <path d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+                                                  fill="currentColor"></path>
+                                        </svg>
+
+                                        <svg viewBox="0 0 14 15"
+                                             fill="none"
+                                             width="10"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             class="button__icon-svg button__icon-svg--copy">
+                                            <path d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"
+                                                  fill="currentColor"></path>
+                                        </svg>
+                                    </span>
+                                    Explore
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination1">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+        <div class="carouselTables" id="t3">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="button" style="position: absolute; bottom: 0; left: 0;" onclick="fillterDate('t3', 'table3');">
+                        Tìm kiếm
+                    </button>
+                    <!-- Empty column for alignment -->
+                </div>
+            </div>
+
+            <table class="table" id="table3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(5)" class="center">Thời gian tạo</th>
+                        <th onclick="sortTable(2)" class="center">Loại</th>
+                        <th onclick="sortTable(3)" class="center">Số lượng</th>
+                        <th onclick="sortTable(4)" class="center">Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SpendingModelList)
+                    {
+
+                        <tr>
+                            <td class="center">@item.CreateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.SpendingType.ToString()</td>
+                            <td>@item.Spending_Amount</td>
+                            <td>@(item.Spending_Amount * item.Spending_Value)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination3">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+        <div class="carouselTables" id="t2">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="fromdte" class="col-form-label">Từ ngày</label>
+                    <input type="text" class="form-control" id="fromdte" name="fromdte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <label for="todte" class="col-form-label">Đến ngày</label>
+                    <input type="text" class="form-control" id="todte" name="todte" placeholder="Select date" required>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="button" style="position: absolute; bottom: 0; left: 0;" onclick="fillterDate('t2', 'table2');">
+                        Tìm kiếm
+                    </button>
+                    <!-- Empty column for alignment -->
+                </div>
+            </div>
+
+            <table class="table" id="table2">
+                <thead class="thead-dark">
+                    <tr>
+                        <th onclick="sortTable(1)" class="center">Mã hóa đơn</th>
+                        <th onclick="sortTable(5)" class="center">Ngày tạo</th>
+                        <th onclick="sortTable(2)" class="center">Món ăn</th>
+                        <th onclick="sortTable(3)" class="center">Nhân viên</th>
+                        <th onclick="sortTable(4)" class="center">Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.receiptEmployeeModelList)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Create_Date)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Dish_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Emp_Name)</td>
+                            <td class="right">@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination2">
+                <!-- Nút phân trang sẽ được tạo ở đây -->
+            </div>
+        </div>
+    </div>
+
+    @* --------------- Set value mặc định là ngày hiện tại --------------- *@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="~/js/History.js"></script>
+</div>

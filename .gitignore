@@ -176,6 +176,12 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
+# Ignore the Migrations folder inside the PayBill project
+PayBill/Migrations/
+
+# OR to ignore all Migrations folders in the repo, use:
+**/Migrations/
+
 # Click-Once directory
 publish/
 

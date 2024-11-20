@@ -6,11 +6,11 @@
     var currentDateTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm"); // Format for datetime-local input
 }
 
-<h1>Create Spending</h1>
+<h1>Tạo mục chi tiêu</h1>
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="SpendingType" class="control-label"></label>
+        <label asp-for="SpendingType" class="control-label">Loại Chi Tiêu</label>
         <select asp-for="SpendingType" class="form-control">
             @foreach (var type in Enum.GetValues(typeof(PayBill.Models.SpendingType)))
             {
@@ -20,22 +20,22 @@
         <span asp-validation-for="SpendingType" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Spending_Amount" class="control-label"></label>
+        <label asp-for="Spending_Amount" class="control-label">Số lượng</label>
         <input asp-for="Spending_Amount" class="form-control" />
         <span asp-validation-for="Spending_Amount" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Spending_Value" class="control-label"></label>
+        <label asp-for="Spending_Value" class="control-label">Số tiền chi tiêu</label>
         <input asp-for="Spending_Value" class="form-control" />
         <span asp-validation-for="Spending_Value" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CreateTime" class="control-label"></label>
+        <label asp-for="CreateTime" class="control-label">Thời Gian Tạo</label>
         <input asp-for="CreateTime" class="form-control" type="datetime-local" value="@currentDateTime" readonly />
         <span asp-validation-for="CreateTime" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Submit" class="button mt-3" />
+        <input type="submit" value="Xác nhận" class="button mt-3" />
     </div>
 </form>
 

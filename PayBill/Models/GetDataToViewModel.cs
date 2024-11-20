@@ -1,4 +1,5 @@
-﻿using X.PagedList;
+﻿using PayBill.DTOs;
+using X.PagedList;
 
 namespace PayBill.Models
 {
@@ -14,5 +15,7 @@ namespace PayBill.Models
         public IPagedList<Receipt_Employee> receiptEmployeeList { get; set; }
         public IPagedList<ReceiptEmployeeViewModel> receiptEmployeeModelList { get; set; }
         public IPagedList<Spending> SpendingModelList { get; set; }
+        public IPagedList<ReceiptSummaryDto> ReceiptSummaryDtos { get; set; }
+        public IPagedList<SpendingSummaryDto> SpendingSummaryDtos { get; set; }
     }
 }

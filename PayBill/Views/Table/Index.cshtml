@@ -7,12 +7,35 @@
 
 <link rel="stylesheet" href="~/css/Booking.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/site.css" />
+<style>
+    /* CSS cho popup hóa đơn */
+    .invoice-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Đảm bảo popup xuất hiện trên các phần tử khác */
+    }
 
+    .invoice-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 80%;
+        max-width: 900px;
+        overflow-y: auto;
+    }
+</style>
 <div>
     <div class="con">
         <asp:Label class="lblMesSuc animeSuc" Visible="false"></asp:Label>
     </div>
-    <h1>DataGrid Example</h1>
+    <h1>Danh sách bàn</h1>
     <table id="dataGrid" class="dataGrid">
         <thead>
             <tr>
@@ -82,7 +105,14 @@
                     <td class="center"></td>
                     <td class="center"></td>
                     <td class="right">Tổng thanh toán</td>
-                    <td><span class="bill">0</span>đ</td>
+                    <td><span class="bill" id="total-bill">0</span>đ</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="right">Thuế VAT (10%)</td>
+                    <td>
+                        <input type="checkbox" class="vat-check-box" />
+                        <span id="vatAmount">0</span>đ
+                    </td>
                 </tr>
                 <tr>
                     <td class="pay">
@@ -92,7 +122,9 @@
                         <input type="hidden" id="paymentMethod" name="paymentMethod" value="">
                     </td>
                     <td class="pay"></td>
-                    <td class="pay"></td>
+                    <td class="pay">
+                        <button class="view-invoice" type="button" data-table="@i" style="text-align: right;">Xem trước Hóa Đơn</button>
+                    </td>
                     <td class="paymentMethods">
                         <div class="divMethod">
                             <div id="1" class="chose fa-solid fa-wallet"><p class="hover-content">Tiền mặt</p></div>
@@ -106,6 +138,49 @@
         </table>
     }
 </div>
+
+<!-- Popup để hiển thị hóa đơn -->
+<div id="invoice-popup" class="invoice-popup" style="display: none;">
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <thead>
+                <tr class="top">
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>
+                                    Payment Method: 
+                                    Created: <strong>@DateTime.Now.ToString("dd/MM/yyyy")</strong><br />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="heading">
+                    <td style="width: 10%;">Index</td>
+                    <td style="width: 40%;">Item</td>
+                    <td style="width: 10%;">Quantity</td>
+                    <td style="width: 15%;">Price</td>
+                    <td style="width: 25%;">Total Price</td>
+                </tr>
+            </thead>
+            <tbody id="invoice-items">
+                <!-- Các món ăn đã chọn sẽ được thêm vào đây -->
+            </tbody>
+            <tr class="total">
+                <td colspan="4"></td>
+                <td>Total: <strong id="total-amount">0</strong>đ</td>
+            </tr>
+        </table>
+        <button onclick="printInvoice()" style="margin: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">In hóa đơn</button>
+    </div>
+</div>
+<script>
+    function printInvoice() {
+        window.print();
+    }
+</script>
+
 
 <!-- Button to navigate to Create page -->
 <a asp-action="Create" class="button mt-3">Thêm Bàn</a>
