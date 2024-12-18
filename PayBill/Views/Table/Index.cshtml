@@ -30,17 +30,40 @@
         max-width: 900px;
         overflow-y: auto;
     }
+    #popup table {
+    font-size: 12px; /* Điều chỉnh kích thước chữ cho toàn bộ bảng */
+    }
+
+    #popup th, #popup td {
+        font-size: 12px; /* Điều chỉnh kích thước chữ cho các thẻ th và td */
+    }
+
+    #popup .price, #popup .total, #popup .bill, #popup #vatAmount {
+        font-size: 12px; /* Giảm kích thước chữ cho giá, tổng, thuế VAT */
+    }
+
+    #popup .counter-container {
+        font-size: 12px; /* Giảm kích thước chữ trong phần đếm số lượng */
+    }
+
+    #popup .pay button, #popup .view-invoice {
+        font-size: 12px; /* Giảm kích thước chữ cho các nút */
+    }
+
+    #popup .hover-content {
+        font-size: 20px; /* Giảm kích thước chữ cho các mô tả hover */
+    }
 </style>
 <div>
     <div class="con">
         <asp:Label class="lblMesSuc animeSuc" Visible="false"></asp:Label>
     </div>
-    <h1>Danh sách bàn</h1>
+    <h1>Danh sách Phòng</h1>
     <table id="dataGrid" class="dataGrid">
         <thead>
             <tr>
                 <th onclick="sortTable(0)">ID</th>
-                <th onclick="sortTable(1)">Bàn</th>
+                <th onclick="sortTable(1)">Phòng</th>
                 <th onclick="sortTable(2)">Chi tiết</th>
             </tr>
         </thead>
@@ -50,10 +73,11 @@
                 var tableClass = "dataGridPopup" + i;
                 var desk = @Html.DisplayFor(modelItem => Model.tablesList[i].NameTable);
                 var id = @Html.DisplayFor(modelItem => Model.tablesList[i].ID);
-                <tr>
+                var trid = "tr-list-room" + i;
+                <tr id=@trid>
                     <td>@Html.DisplayFor(modelItem => Model.tablesList[i].ID)</td>
                     <td>@Html.DisplayFor(modelItem => Model.tablesList[i].NameTable)</td>
-                    <td><button id="tbl" type="button" class="button" onclick="openPopup('@tableClass', '@desk');" data-table="@id">Chi tiết</button></td>
+                    <td><button id="tbl" type="button" class="button" onclick="openPopup('@tableClass', '@desk', '@i');" data-table="@id">Chi tiết</button></td>
                 </tr>
             }
         </tbody>
@@ -101,18 +125,25 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <td colspan="4" class="right">Thuế VAT (10%)</td>
+                    <td>
+                        <input type="checkbox" class="vat-check-box" checked/>
+                        <span id="vatAmount">0</span>đ
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="right">HDD + Card = 5%</td>
+                    <td>
+                        <input type="checkbox" class="hdd-check-box" />
+                        <span id="hdd">0</span>đ
+                    </td>
+                </tr>
+                <tr>
                     <td class="left"></td>
                     <td class="center"></td>
                     <td class="center"></td>
                     <td class="right">Tổng thanh toán</td>
                     <td><span class="bill" id="total-bill">0</span>đ</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="right">Thuế VAT (10%)</td>
-                    <td>
-                        <input type="checkbox" class="vat-check-box" />
-                        <span id="vatAmount">0</span>đ
-                    </td>
                 </tr>
                 <tr>
                     <td class="pay">
